@@ -1,0 +1,82 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.LoginPage"
+             Title="Login">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#4F46E5" Offset="0.0" />
+            <GradientStop Color="#3B82F6" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="25" HorizontalOptions="FillAndExpand">
+            <Label Text="Iniciar Sesión"
+                   FontSize="36"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="White" />
+
+            <BoxView HeightRequest="3" WidthRequest="120" Color="White" HorizontalOptions="Center" CornerRadius="2" />
+
+            <Frame BackgroundColor="White" CornerRadius="25" Padding="25"  >
+                <VerticalStackLayout Spacing="20">
+
+                    <Entry x:Name="usernameEntry"
+                       Placeholder="Correo"
+                       FontSize="18"
+                       TextColor="#1F2937"
+                       PlaceholderColor="#9CA3AF"
+                       BackgroundColor="Transparent"
+                       HeightRequest="52"
+                       HorizontalOptions="FillAndExpand" />
+
+                    <Entry x:Name="passwordEntry"
+                       Placeholder="Contraseña"
+                       IsPassword="True"
+                       FontSize="18"
+                       TextColor="#1F2937"
+                       PlaceholderColor="#9CA3AF"
+                       BackgroundColor="Transparent"
+                       HeightRequest="52"
+                       HorizontalOptions="FillAndExpand" />
+
+                    <Label x:Name="errorLabel"
+                       TextColor="#DC2626"
+                       FontAttributes="Bold"
+                       IsVisible="False"
+                       HorizontalOptions="Center" />
+
+                    <Button Text="Ingresar"
+                        BackgroundColor="#4F46E5"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="25"
+                        HeightRequest="52"
+                        Clicked="OnLoginClicked">
+                        <Button.Triggers>
+                            <Trigger TargetType="Button" Property="IsPressed" Value="True">
+                                <Setter Property="BackgroundColor" Value="#3730A3" />
+                            </Trigger>
+                        </Button.Triggers>
+                    </Button>
+
+                    <Button Text="Registrarse"
+                        BackgroundColor="Transparent"
+                        TextColor="#4F46E5"
+                        FontAttributes="Bold"
+                        BorderColor="#4F46E5"
+                        BorderWidth="2"
+                        CornerRadius="25"
+                        HeightRequest="52"
+                        Clicked="OnRegisterClicked" />
+                </VerticalStackLayout>
+            </Frame>
+            <Label Text="¿No tienes cuenta? Regístrate"
+                   TextColor="White"
+                   FontAttributes="Italic"
+                   HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

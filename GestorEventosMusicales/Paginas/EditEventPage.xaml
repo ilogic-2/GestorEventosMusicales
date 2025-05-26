@@ -1,0 +1,125 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:GestorEventosMusicales.Converters"
+             x:Class="GestorEventosMusicales.Paginas.EditEventPage"
+             Title="Editar Evento">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:ManagerIdToVisibilityConverter x:Key="ManagerVisibilityConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="Editar evento" FontSize="28" HorizontalOptions="Center" />
+
+            <!-- Nombre del evento -->
+            <Entry x:Name="nombreEntry" Placeholder="Nombre del evento" Text="{Binding Nombre}" />
+
+            <!-- Fechas -->
+            <Label Text="Fecha del evento:" />
+            <DatePicker x:Name="fechaEventoPicker" Date="{Binding FechaEvento}" />
+
+            <Label Text="Fecha del montaje:" />
+            <DatePicker x:Name="fechaMontajePicker" Date="{Binding FechaMontaje}" />
+
+
+
+            <!-- Locación -->
+            <Label Text="Locación:" />
+                <HorizontalStackLayout>
+                    <Label x:Name="locacionNombreLabel" Text="Nombre de la locación: " FontAttributes="Bold"/>
+                    <Label x:Name="locacionDireccionLabel" Text="Dirección de la locación:" />
+                </HorizontalStackLayout>
+            <Picker x:Name="locacionPicker" ItemDisplayBinding="{Binding Nombre}" />
+
+            <!-- Artistas participantes -->
+            <Label Text="Artistas participantes:" FontAttributes="Bold" />
+            <CollectionView x:Name="artistasCollection" ItemsSource="{Binding ArtistasAsociados}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding Nombre}" Grid.Column="0" VerticalOptions="Center" />
+                            <Button Text="X"
+                                    BackgroundColor="Red"
+                                    TextColor="White"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    Grid.Column="1"
+                                    Clicked="OnQuitarArtistaClicked"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button Text="+ Agregar participante" Clicked="OnAgregarArtistaClicked"
+                    BackgroundColor="#eeeeee" TextColor="Black" />
+
+            <!-- Instrumentos -->
+            <Label Text="Instrumentos:" FontAttributes="Bold" />
+            <CollectionView x:Name="instrumentosCollection" ItemsSource="{Binding InstrumentosAsociados}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding Nombre}" Grid.Column="0" VerticalOptions="Center" />
+                            <Button Text="X"
+                                    BackgroundColor="Red"
+                                    TextColor="White"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    Grid.Column="1"
+                                    Clicked="OnQuitarInstrumentoClicked"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button Text="+ Añadir instrumentos" Clicked="OnAgregarInstrumentoClicked" BackgroundColor="#eeeeee" TextColor="Black" />
+
+            <!-- Organizadores (Managers) -->
+            <Label Text="Organizadores:" FontAttributes="Bold" />
+
+            <!-- Managers asociados -->
+            <Label Text="Managers asociados:" FontAttributes="Bold" />
+            <CollectionView x:Name="ManagersCollection" ItemsSource="{Binding ManagersAsociados}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{Binding Nombre}" Grid.Column="0" VerticalOptions="Center" />
+
+                            <Button Text="X"
+                                BackgroundColor="Red"
+                                TextColor="White"
+                                WidthRequest="30"
+                                HeightRequest="30"
+                                Grid.Column="1"
+                                Clicked="OnQuitarManagerClicked"
+                                IsVisible="{Binding Id, Converter={StaticResource ManagerVisibilityConverter}}" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button Text="+ Agregar organizador" Clicked="OnAñadirManagerClicked"
+                    BackgroundColor="#eeeeee" TextColor="Black" />
+
+            <!-- Botones de acción -->
+            <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
+                <Button Text="Guardar" BackgroundColor="LightGreen" TextColor="Black" Clicked="OnGuardarClicked" />
+                <Button Text="Cancelar" BackgroundColor="LightGray" TextColor="Black" Clicked="OnCancelarClicked" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

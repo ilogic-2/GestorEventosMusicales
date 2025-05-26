@@ -1,0 +1,110 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.ViewEditArtistPage"
+             Title="Artistas"
+             BackgroundColor="#FAFAFA">
+
+    <Grid Padding="20" RowSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Título con línea -->
+            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                <Label Text="🎺 Artistas"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="#333"
+                       HorizontalOptions="Start" />
+                <BoxView HeightRequest="2"
+                         WidthRequest="80"
+                         Color="#00C853"
+                         HorizontalOptions="Start" />
+            </VerticalStackLayout>
+
+            <!-- Botón + alineado arriba a la derecha -->
+            <Button Grid.Column="1"
+                    Text="＋"
+                    FontSize="20"
+                    WidthRequest="50"
+                    HeightRequest="50"
+                    CornerRadius="20"
+                    BackgroundColor="#00C853"
+                    TextColor="White"
+                    VerticalOptions="Start"
+                    HorizontalOptions="End"
+                    Clicked="OnAddArtistClicked" />
+        </Grid>
+
+        <!-- Barra de búsqueda en fila separada -->
+        <SearchBar Grid.Row="1"
+                   x:Name="searchBar"
+                   Placeholder="Buscar artista..."
+                   TextChanged="OnSearchTextChanged"
+                   HorizontalOptions="FillAndExpand"
+                   BackgroundColor="White"
+                   CancelButtonColor="#007AFF"
+                   HeightRequest="40" />
+
+        <!-- Lista de artistas -->
+        <CollectionView x:Name="artistList" Grid.Row="2" Margin="0,10,0,0" ItemsSource="{Binding Artistas}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,5" Padding="10" CornerRadius="15" BackgroundColor="White">
+                        <Grid ColumnSpacing="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Imagen -->
+                            <Frame WidthRequest="60" HeightRequest="60" CornerRadius="30" Padding="0" IsClippedToBounds="True" HasShadow="False" BackgroundColor="#E0E7FF" VerticalOptions="Center">
+                                <Image Source="{Binding ImagenPreview}"
+                                 Aspect="AspectFill" />
+                            </Frame>
+
+                            <!-- Info artista -->
+                            <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="{Binding Nombre}"  FontSize="18" FontAttributes="Bold" TextColor="#1F2937" />
+                                <Label Text="{Binding Edad}" FontSize="14" TextColor="#4B5563" />
+                                <Label Text="{Binding Banda}" FontSize="14" TextColor="#4B5563" />
+                            </StackLayout>
+
+                            <!-- Botones para editar y eliminar -->
+                            <HorizontalStackLayout Grid.Column="2" Spacing="10" VerticalOptions="Center" HorizontalOptions="End">
+                                <Button Text="✏"
+                                FontSize="16"
+                                BackgroundColor="#E0F0FF"
+                                TextColor="#007AFF"
+                                WidthRequest="38"
+                                HeightRequest="38"
+                                CornerRadius="19"
+                                Clicked="OnEditArtistClicked"
+                                CommandParameter="{Binding .}" />
+
+                                <Button Text="🗑"
+                                FontSize="16"
+                                BackgroundColor="#FFE0E0"
+                                TextColor="#FF3B30"
+                                WidthRequest="38"
+                                HeightRequest="38"
+                                CornerRadius="19"
+                                Clicked="OnDeleteArtistClicked"
+                                CommandParameter="{Binding .}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

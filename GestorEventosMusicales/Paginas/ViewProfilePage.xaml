@@ -1,0 +1,73 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.ViewProfilePage"
+             Title="Perfil"
+             BackgroundColor="#F9FAFB">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="30" HorizontalOptions="Center">
+
+            <!-- Foto y nombre -->
+            <HorizontalStackLayout Spacing="20" HorizontalOptions="Center" VerticalOptions="Center">
+                <Frame WidthRequest="120"
+                       HeightRequest="120"
+                       CornerRadius="60"
+                       BackgroundColor="#E0E0E0"
+                       Padding="0"
+                        >
+                    <Image x:Name="imagen"
+                           Aspect="AspectFill"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="FillAndExpand" />
+                </Frame>
+
+                <VerticalStackLayout VerticalOptions="Center">
+                    <Label x:Name="nombreLabel"
+                           Text="Kleivan"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="#333"
+                           HorizontalOptions="Start" />
+
+                    <Label x:Name="correoLabel"
+                           Text="correo@ejemplo.com"
+                           FontSize="14"
+                           TextColor="#666"
+                           HorizontalOptions="Start" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+
+            <!-- Opciones -->
+            <VerticalStackLayout Padding="30" Spacing="25" HorizontalOptions="FillAndExpand">
+
+                <Frame CornerRadius="16" BackgroundColor="White"  >
+                    <Button Text="✏️  Editar datos personales"
+                BackgroundColor="Transparent"
+                TextColor="#111"
+                FontSize="16"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnEditarDatosClicked" />
+                </Frame>
+
+                <Frame CornerRadius="16" BackgroundColor="White"  >
+                    <Button Text="🔐  Cambiar contraseña"
+                BackgroundColor="Transparent"
+                TextColor="#111"
+                FontSize="16"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnCambiarContrasenaClicked" />
+                </Frame>
+
+                <Frame CornerRadius="16" BackgroundColor="White"  >
+                    <Button Text="🚪  Cerrar sesión"
+                BackgroundColor="Transparent"
+                TextColor="#B00020"
+                FontSize="16"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnCerrarSesionClicked" />
+                </Frame>
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

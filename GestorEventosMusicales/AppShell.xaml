@@ -1,0 +1,20 @@
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:GestorEventosMusicales.Paginas"
+       x:Class="GestorEventosMusicales.AppShell"
+       FlyoutBehavior="Disabled"
+       Shell.NavBarIsVisible="False">
+
+    <!-- Páginas sin pestañas -->
+    <ShellContent Route="SplashPage" ContentTemplate="{DataTemplate local:SplashPage}" />
+    <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
+    <ShellContent Route="RegisterPage" ContentTemplate="{DataTemplate local:RegisterPage}" />
+    <ShellContent Route="HomeManagerPage" ContentTemplate="{DataTemplate local:HomeManagerPage}" />
+    <ShellContent Route="CreateEventPage" ContentTemplate="{DataTemplate local:CreateEventPage}" />
+    <ShellContent Route="ViewEditEventPage" ContentTemplate="{DataTemplate local:ViewEditEventPage}" />
+    <ShellContent Route="ViewEditArtistPage" ContentTemplate="{DataTemplate local:ViewEditArtistPage}" />
+    <ShellContent Route="ViewEditLocationPage" ContentTemplate="{DataTemplate local:ViewEditLocationPage}" />
+    <ShellContent Route="ViewEditInstrumentPage" ContentTemplate="{DataTemplate local:ViewEditInstrumentPage}" />
+    <ShellContent Route="ViewProfilePage" ContentTemplate="{DataTemplate local:ViewProfilePage}" />
+
+</Shell>

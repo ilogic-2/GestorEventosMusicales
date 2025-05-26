@@ -1,0 +1,60 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.CambiarContrasenaPage"
+             Title="Cambiar Contraseña"
+             BackgroundColor="#F9FAFB">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="25" HorizontalOptions="FillAndExpand">
+            <Label Text="Actualiza tu contraseña"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="#333"
+                   HorizontalOptions="Center" />
+
+            <Entry x:Name="actualEntry"
+                   Placeholder="Contraseña actual"
+                   IsPassword="True"
+                   BackgroundColor="White"
+                   TextColor="#333"
+                   PlaceholderColor="#888"
+                   HeightRequest="48"
+                   Margin="0,0,0,5"/>
+
+            <Entry x:Name="nuevaEntry"
+                   Placeholder="Nueva contraseña"
+                   IsPassword="True"
+                   BackgroundColor="White"
+                   TextColor="#333"
+                   PlaceholderColor="#888"
+                   HeightRequest="48"
+                   Margin="0,0,0,5"/>
+
+            <Entry x:Name="confirmarEntry"
+                   Placeholder="Confirmar nueva contraseña"
+                   IsPassword="True"
+                   BackgroundColor="White"
+                   TextColor="#333"
+                   PlaceholderColor="#888"
+                   HeightRequest="48"
+                   Margin="0,0,0,10"/>
+
+            <Button Text="🔐 Cambiar contraseña"
+                    Clicked="OnCambiarClicked"
+                    BackgroundColor="#2563EB"
+                    TextColor="White"
+                    CornerRadius="14"
+                    FontSize="16"
+                    HeightRequest="48" />
+
+            <Button Text="❌ Cancelar"
+                    Clicked="OnCancelarClicked"
+                    BackgroundColor="LightGray"
+                    TextColor="#444"
+                    CornerRadius="14"
+                    FontSize="16"
+                    HeightRequest="48" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

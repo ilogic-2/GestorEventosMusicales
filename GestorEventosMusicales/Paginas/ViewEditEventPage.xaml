@@ -1,0 +1,91 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.ViewEditEventPage"
+             Title="Ver y Editar Evento"
+             BackgroundColor="#F9FAFB">
+
+    <Grid Padding="20" RowSpacing="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Título -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" HorizontalOptions="Center">
+            <Label Text="Ver y editar evento"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#1F2937"
+                   HorizontalOptions="Center" />
+            <BoxView HeightRequest="2"
+                     WidthRequest="140"
+                     Color="#3B82F6"
+                     HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Barra de búsqueda -->
+        <SearchBar Grid.Row="1"
+                   x:Name="searchBar"
+                   Placeholder="Buscar evento..."
+                   TextChanged="OnSearchTextChanged"
+                   BackgroundColor="White"
+                   PlaceholderColor="#888"
+                   HeightRequest="40" />
+
+        <!-- Lista de eventos -->
+        <CollectionView Grid.Row="2" x:Name="eventosList" ItemsSource="{Binding Eventos}" Margin="0,10,0,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="15" Margin="0,0,0,10" BackgroundColor="White" CornerRadius="15" BorderColor="#E5E7EB">
+                        <StackLayout Spacing="8">
+
+                            <Label Text="{Binding Nombre}"
+                                   FontAttributes="Bold"
+                                   FontSize="20"
+                                   TextColor="#111827" />
+
+                            <Label Text="{Binding FechaEvento, StringFormat='Evento: {0:dd/MM/yyyy}'}"
+                                   FontSize="14"
+                                   TextColor="#4B5563" />
+
+                            <Label Text="{Binding FechaMontaje, StringFormat='Montaje: {0:dd/MM/yyyy}'}"
+                                   FontSize="14"
+                                   TextColor="#4B5563" />
+
+                            <Label Text="{Binding Locacion.Nombre}"
+                                   FontSize="16"
+                                   TextColor="#374151" />
+
+                            <Label Text="{Binding Locacion.Direccion}"
+                                   FontSize="14"
+                                   TextColor="#6B7280" />
+
+                            <!-- Botones editar y eliminar en HorizontalStackLayout -->
+                            <HorizontalStackLayout HorizontalOptions="End" Spacing="10">
+                                <Button Text="✏"
+                                        FontSize="16"
+                                        BackgroundColor="#E0F0FF"
+                                        TextColor="#3B82F6"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
+                                        CornerRadius="19"
+                                        Clicked="OnEditEventClicked"
+                                        CommandParameter="{Binding}" />
+                                <Button Text="🗑"
+                                        FontSize="16"
+                                        BackgroundColor="#FFE0E0"
+                                        TextColor="#FF3B30"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
+                                        CornerRadius="19"
+                                        Clicked="OnDeleteEventClicked"
+                                        CommandParameter="{Binding}" />
+                            </HorizontalStackLayout>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

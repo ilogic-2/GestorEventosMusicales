@@ -1,0 +1,191 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:GestorEventosMusicales.Converters"
+             x:Class="GestorEventosMusicales.Paginas.AddArtistPage"
+             Title="Añadir Artista"
+             BackgroundColor="#F0F4F8">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:ManagerIdToVisibilityConverter x:Key="ManagerVisibilityConverter" />
+            <!-- Colores y estilos reutilizables -->
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="White"/>
+                <Setter Property="TextColor" Value="#222222"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Margin" Value="0,5"/>
+                <Setter Property="HeightRequest" Value="45"/>
+                <Setter Property="PlaceholderColor" Value="#999999"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+
+            <Style x:Key="ButtonPrimary" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#4F46E5"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="HeightRequest" Value="50"/>
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+
+            <Style x:Key="ButtonDanger" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#EF4444"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="HeightRequest" Value="40"/>
+                <Setter Property="WidthRequest" Value="40"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="#55000000" Offset="0,2" Radius="3"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ButtonSecondary" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#6B7280"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="HeightRequest" Value="50"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="#33000000" Offset="0,2" Radius="4"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="25" Spacing="25">
+
+            <!-- Imagen y Nombre -->
+            <Frame  
+               CornerRadius="20"
+               Padding="15"
+               BackgroundColor="White"
+               VerticalOptions="Center"
+               HorizontalOptions="FillAndExpand"
+               Shadow="5,5,10,#22000000">
+                <HorizontalStackLayout Spacing="15" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                    <Frame WidthRequest="110" HeightRequest="120" CornerRadius="55" IsClippedToBounds="True"   BackgroundColor="#E0E7FF">
+                        <Image x:Name="imagenPreview"
+                        Aspect="AspectFill"
+                        WidthRequest="110"
+                        HeightRequest="110"
+                        BackgroundColor="#CBD5E1" />
+                    </Frame>
+
+                    <VerticalStackLayout Spacing="8" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                        <Entry x:Name="nombreEntry"
+                           Placeholder="Nombre"
+                           Style="{StaticResource EntryStyle}"
+                           HeightRequest="40" />
+
+                        <Button Text="Seleccionar Imagen"
+                            Clicked="OnSeleccionarImagenClicked"
+                            Style="{StaticResource ButtonPrimary}"
+                            HeightRequest="36"  
+                            HorizontalOptions="Start"   
+                            WidthRequest="150" />
+                    </VerticalStackLayout>
+
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Banda -->
+            <Frame Padding="10"
+               CornerRadius="12"
+               HasShadow="False"
+               BackgroundColor="White"
+               HorizontalOptions="FillAndExpand">
+               <Entry x:Name="bandaEntry" Placeholder="Banda" />
+            </Frame>
+
+            <!-- Nacionalidad -->
+            <Frame Padding="10"
+               CornerRadius="12"
+               HasShadow="False"
+               BackgroundColor="White"
+               HorizontalOptions="FillAndExpand">
+                <Entry x:Name="nacionalidadEntry" Placeholder="Nacionalidad"/>
+            </Frame>
+
+            <!-- Fecha de nacimiento -->
+            <Frame BackgroundColor="White" Padding="15" CornerRadius="16"   Margin="0,10,0,0">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Fecha de nacimiento:"
+                           FontAttributes="Bold"
+                           TextColor="#374151"
+                           FontSize="16" />
+                    <DatePicker x:Name="fechaNacimientoPicker"
+                                TextColor="#222222"
+                                BackgroundColor="Transparent"
+                                FontSize="16"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Managers asociados -->
+            <Label Text="Managers asociados:"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   TextColor="#111111"
+                   Margin="0,10,0,5" />
+
+            <CollectionView x:Name="ManagersCollection" HeightRequest="150">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="12"
+                               Margin="0,0,0,12"
+                               BackgroundColor="White"
+                               CornerRadius="16"
+                                
+                               HorizontalOptions="FillAndExpand">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label Text="{Binding Nombre}"
+                                       VerticalOptions="Center"
+                                       FontSize="16"
+                                       TextColor="#222222" />
+
+                                <Button Text="❌"
+                                        Grid.Column="1"
+                                        Clicked="OnQuitarManagerClicked"
+                                        CommandParameter="{Binding .}"
+                                        IsVisible="{Binding Id, Converter={StaticResource ManagerVisibilityConverter}}"
+                                        Style="{StaticResource ButtonDanger}" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Añadir manager -->
+            <Button Text="+ Añadir manager"
+                    Clicked="OnAñadirManagerClicked"
+                    Style="{StaticResource ButtonPrimary}" />
+
+            <!-- Botones guardar y cancelar -->
+            <HorizontalStackLayout Spacing="20" Padding="20,0,20,20">
+                <Button Text="Guardar artista"
+                        Clicked="OnGuardarClicked"
+                        Style="{StaticResource ButtonPrimary}"
+                        HorizontalOptions="FillAndExpand" />
+
+                <Button Text="Cancelar"
+                        Clicked="OnCancelarClicked"
+                        Style="{StaticResource ButtonSecondary}"
+                        HorizontalOptions="FillAndExpand" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

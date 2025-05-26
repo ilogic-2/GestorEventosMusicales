@@ -1,0 +1,73 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.EditarPerfilPage"
+             Title="Editar Perfil"
+             BackgroundColor="#F9FAFB">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="25" HorizontalOptions="FillAndExpand">
+
+            <!-- Vista previa de imagen redondeada -->
+            <Frame WidthRequest="150"
+                   HeightRequest="150"
+                   CornerRadius="75"
+                   Padding="0"
+                   BackgroundColor="#E0E0E0">
+                    <Image x:Name="imagenPerfil"
+                           Aspect="AspectFill"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="FillAndExpand" />
+            </Frame>
+
+            <!-- Botón para seleccionar imagen -->
+            <Button Text="📷 Seleccionar Imagen"
+                    Clicked="OnSeleccionarImagenClicked"
+                    BackgroundColor="#e0e7ff"
+                    TextColor="#1e40af"
+                    FontSize="14"
+                    CornerRadius="12"
+                    HeightRequest="44" />
+
+            <Entry x:Name="nombreEntry"
+                   Placeholder="Nombre"
+                   BackgroundColor="White"
+                   TextColor="#333"
+                   PlaceholderColor="#888"
+                   HeightRequest="48"/>
+
+            <Entry x:Name="correoEntry"
+                   Placeholder="Correo electrónico"
+                   Keyboard="Email"
+                   BackgroundColor="White"
+                   TextColor="#333"
+                   PlaceholderColor="#888"
+                   HeightRequest="48"/>
+
+            <Entry x:Name="telefonoEntry"
+                   Placeholder="Teléfono"
+                   Keyboard="Telephone"
+                   BackgroundColor="White"
+                   TextColor="#333"
+                   PlaceholderColor="#888"
+                   HeightRequest="48" />
+
+            <!-- Botón para guardar cambios -->
+            <Button Text="💾 Guardar cambios"
+                    Clicked="OnGuardarClicked"
+                    BackgroundColor="#10b981"
+                    TextColor="White"
+                    FontSize="16"
+                    CornerRadius="14"
+                    HeightRequest="48" />
+
+            <!-- Botón para cancelar -->
+            <Button Text="❌ Cancelar"
+                    Clicked="OnCancelarClicked"
+                    BackgroundColor="LightGray"
+                    TextColor="#444"
+                    FontSize="16"
+                    CornerRadius="14"
+                    HeightRequest="48" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

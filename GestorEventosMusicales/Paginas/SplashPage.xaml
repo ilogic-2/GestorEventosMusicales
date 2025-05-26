@@ -1,0 +1,14 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.SplashPage"
+             BackgroundColor="Black"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+        <Image Source="splash.png"
+               WidthRequest="200"
+               HeightRequest="200"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

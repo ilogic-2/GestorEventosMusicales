@@ -1,0 +1,108 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.ViewEditLocationPage"
+             Title="Lugares"
+             BackgroundColor="#F9FAFB">
+
+    <Grid Padding="20" RowSpacing="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Título con botón + a la derecha -->
+        <Grid Grid.Row="0" ColumnSpacing="10" VerticalOptions="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                <Label Text="Buscar lugar..."
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="#111"
+                       HorizontalOptions="Start" />
+                <BoxView HeightRequest="2"
+                         WidthRequest="80"
+                         Color="#00C853"
+                         HorizontalOptions="Start" />
+            </VerticalStackLayout>
+
+            <Button Grid.Column="1"
+                    Text="＋"
+                    FontSize="20"
+                    WidthRequest="50"
+                    HeightRequest="50"
+                    CornerRadius="20"
+                    BackgroundColor="#00C853"
+                    TextColor="White"
+                    VerticalOptions="Start"
+                    HorizontalOptions="End"
+                    Clicked="OnAddLocationClicked" />
+        </Grid>
+
+        <!-- Buscador -->
+        <SearchBar Grid.Row="1"
+                   x:Name="searchBar"
+                   Placeholder="Buscar lugar..."
+                   TextChanged="OnSearchTextChanged"
+                   BackgroundColor="White"
+                   PlaceholderColor="#888"
+                   HeightRequest="40" />
+
+        <!-- Lista de lugares -->
+        <CollectionView Grid.Row="2" x:Name="locationList" Margin="0,10,0,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="12" Margin="0,0,0,10" BackgroundColor="White" CornerRadius="12">
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{Binding Nombre}"
+                                   FontAttributes="Bold"
+                                   FontSize="16"
+                                   TextColor="#111"
+                                   VerticalOptions="Center" />
+
+                            <Label Text="{Binding Direccion}"
+                                   Grid.Column="1"
+                                   FontAttributes="Italic"
+                                   FontSize="14"
+                                   TextColor="#666"
+                                   VerticalOptions="Center" />
+
+                            <!-- Botones editar / eliminar -->
+                            <HorizontalStackLayout Grid.Column="2" Spacing="10" VerticalOptions="Center" HorizontalOptions="End">
+                                <Button Text="✏"
+                                        FontSize="16"
+                                        BackgroundColor="#E0F0FF"
+                                        TextColor="#007AFF"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
+                                        CornerRadius="19"
+                                        Clicked="OnEditarLocacionClicked"
+                                        CommandParameter="{Binding .}" />
+
+                                <Button Text="🗑"
+                                        FontSize="16"
+                                        BackgroundColor="#FFE0E0"
+                                        TextColor="#FF3B30"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
+                                        CornerRadius="19"
+                                        Clicked="OnEliminarLocacionClicked"
+                                        CommandParameter="{Binding .}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

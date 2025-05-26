@@ -1,0 +1,89 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.ViewEditInstrumentPage"
+             Title="Instrumentos">
+
+    <Grid BackgroundColor="#F9F9F9">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Encabezado -->
+        <VerticalStackLayout Grid.Row="0" Padding="20,20,20,0" Spacing="4">
+            <Label Text="🎺 Instrumentos"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#333"
+                   HorizontalOptions="Start" />
+
+            <BoxView HeightRequest="2"
+                     WidthRequest="80"
+                     Color="#00C853"
+                     HorizontalOptions="Start" />
+        </VerticalStackLayout>
+
+        <!-- Lista de instrumentos -->
+        <CollectionView x:Name="instrumentList" Grid.Row="1" Margin="20,10,20,80">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame CornerRadius="12" Padding="15" Margin="0,8" BackgroundColor="White">
+                        <Grid ColumnSpacing="10" RowSpacing="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Información del instrumento -->
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Nombre}" FontSize="20" TextColor="#333" />
+                                <Label Text="{Binding Cantidad, StringFormat='Cantidad: {0}'}" FontSize="14" TextColor="#555" />
+                                <Label Text="{Binding Proveedor, StringFormat='Proveedor: {0}'}" FontSize="14" TextColor="#777" />
+                            </VerticalStackLayout>
+
+                            <!-- Botones editar / eliminar -->
+                            <HorizontalStackLayout Grid.Column="1" Spacing="10"
+                                                   VerticalOptions="Center">
+                                <Button Text="✏"
+                                        FontSize="16"
+                                        BackgroundColor="#E0F0FF"
+                                        TextColor="#007AFF"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
+                                        CornerRadius="19"
+                                        Clicked="OnEditInstrumentClicked"
+                                        CommandParameter="{Binding .}" />
+
+                                <Button Text="🗑"
+                                        FontSize="16"
+                                        BackgroundColor="#FFE0E0"
+                                        TextColor="#FF3B30"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
+                                        CornerRadius="19"
+                                        Clicked="OnDeleteInstrumentClicked"
+                                        CommandParameter="{Binding .}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Botón flotante "+" -->
+        <Grid>
+            <Button Text="＋"
+                    FontSize="20"
+                    WidthRequest="50"
+                    HeightRequest="50"
+                    CornerRadius="20"
+                    BackgroundColor="#00C853"
+                    TextColor="White"
+                    VerticalOptions="End"
+                    HorizontalOptions="End"
+                    Margin="20"
+                    Clicked="OnAddInstrumentClicked"
+                    ZIndex="2"/>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,206 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.CreateEventPage"
+             Title="Crear Evento"
+             BackgroundColor="#FAFAFA">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="25">
+
+            <Label Text="Crear evento"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#1F2937" />
+
+            <!-- Nombre del evento -->
+            <Entry x:Name="nombreEventoEntry"
+                   Placeholder="Nombre del evento"
+                   FontSize="16"
+                   BackgroundColor="White"
+                   TextColor="#111827"
+                   HeightRequest="45"
+                   />
+
+            <!-- Fechas -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Fecha del evento:" 
+                       TextColor="#374151" />
+                <DatePicker x:Name="fechaEventoPicker"
+                       BackgroundColor="White"
+                       HeightRequest="45" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Fecha del montaje:" 
+                       TextColor="#374151" />
+                <DatePicker x:Name="fechaMontajePicker"
+                       BackgroundColor="White"
+                       HeightRequest="45" />
+            </VerticalStackLayout>
+
+            <!-- Locación -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Locación:" 
+                       TextColor="#374151" />
+                <Picker x:Name="locacionPicker"
+                        Title="Selecciona una locación"
+                        BackgroundColor="White"
+                        HeightRequest="45" />
+            </VerticalStackLayout>
+
+            <!-- Artistas participantes -->
+            <Label Text="Artistas participantes:" 
+                   FontAttributes="Bold" 
+                   TextColor="#1F2937" />
+
+            <CollectionView x:Name="artistasCollection" HeightRequest="140" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="8" ColumnSpacing="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding Nombre}" 
+                                   Grid.Column="0" 
+                                   VerticalOptions="Center"
+                                   FontSize="16"
+                                   TextColor="#111827"/>
+                            <Button Text="✕"
+                                    BackgroundColor="#EF4444"
+                                    TextColor="White"
+                                    WidthRequest="35"
+                                    HeightRequest="35"
+                                    FontSize="18"
+                                    CornerRadius="17"
+                                    Grid.Column="1"
+                                    Clicked="OnQuitarArtistaClicked"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="No hay artistas agregados."
+                           FontAttributes="Italic"
+                           HorizontalOptions="Center"
+                           TextColor="#6B7280" />
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <Button Text="+ Agregar participante" 
+                    Clicked="OnAgregarArtistaClicked"
+                    BackgroundColor="#E5E7EB" 
+                    TextColor="#111827" 
+                    CornerRadius="10"
+                    HeightRequest="45" />
+
+            <!-- Instrumentos -->
+            <Label Text="Instrumentos:" 
+                   FontAttributes="Bold" 
+                   TextColor="#1F2937" />
+
+            <CollectionView x:Name="instrumentosCollection" HeightRequest="140" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="8" ColumnSpacing="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding Nombre}" 
+                                   Grid.Column="0" 
+                                   VerticalOptions="Center"
+                                   FontSize="16"
+                                   TextColor="#111827" />
+                            <Button Text="✕"
+                                    BackgroundColor="#EF4444"
+                                    TextColor="White"
+                                    WidthRequest="35"
+                                    HeightRequest="35"
+                                    FontSize="18"
+                                    CornerRadius="17"
+                                    Grid.Column="1"
+                                    Clicked="OnQuitarInstrumentoClicked"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="No hay instrumentos agregados."
+                           FontAttributes="Italic"
+                           HorizontalOptions="Center"
+                           TextColor="#6B7280" />
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <Button Text="+ Añadir instrumentos" 
+                    Clicked="OnAgregarInstrumentoClicked"
+                    BackgroundColor="#E5E7EB" 
+                    TextColor="#111827" 
+                    CornerRadius="10"
+                    HeightRequest="45" />
+
+            <!-- Organizadores (Managers) -->
+            <Label Text="Organizadores:" 
+                   FontAttributes="Bold" 
+                   TextColor="#1F2937" />
+
+            <CollectionView x:Name="organizadoresCollection" HeightRequest="140" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="8" ColumnSpacing="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding Nombre}" 
+                                   Grid.Column="0" 
+                                   VerticalOptions="Center"
+                                   FontSize="16"
+                                   TextColor="#111827" />
+                            <Button Text="✕"
+                                    BackgroundColor="#EF4444"
+                                    TextColor="White"
+                                    WidthRequest="35"
+                                    HeightRequest="35"
+                                    FontSize="18"
+                                    CornerRadius="17"
+                                    Grid.Column="1"
+                                    Clicked="OnQuitarOrganizadorClicked"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="No hay organizadores agregados."
+                           FontAttributes="Italic"
+                           HorizontalOptions="Center"
+                           TextColor="#6B7280" />
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <Button Text="+ Agregar organizador" 
+                    Clicked="OnAgregarOrganizadorClicked"
+                    BackgroundColor="#E5E7EB" 
+                    TextColor="#111827" 
+                    CornerRadius="10"
+                    HeightRequest="45" />
+
+            <!-- Botones de acción -->
+            <HorizontalStackLayout Spacing="25" HorizontalOptions="Center">
+                <Button Text="Guardar" 
+                        BackgroundColor="#22C55E" 
+                        TextColor="White" 
+                        CornerRadius="15" 
+                        Padding="15,10"
+                        WidthRequest="130"
+                        Clicked="OnGuardarClicked" />
+                <Button Text="Cancelar" 
+                        BackgroundColor="#9CA3AF" 
+                        TextColor="White" 
+                        CornerRadius="15" 
+                        Padding="15,10"
+                        WidthRequest="130"
+                        Clicked="OnCancelarClicked" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

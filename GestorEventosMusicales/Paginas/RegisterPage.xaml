@@ -1,0 +1,121 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.RegisterPage"
+             Title="Registro">
+
+    <ContentPage.Background>
+        <!-- Fondo con gradiente vertical -->
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#4F46E5" Offset="0.0" />
+            <GradientStop Color="#3B82F6" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="25" HorizontalOptions="FillAndExpand">
+
+            <!-- Título con sombra y degradado -->
+            <Label Text="Registro de Usuario"
+                   FontSize="34"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="White">
+            </Label>
+
+            <BoxView HeightRequest="3" WidthRequest="120" Color="White" HorizontalOptions="Center" CornerRadius="2"/>
+
+            <!-- Contenedor con sombra y fondo blanco -->
+            <Frame BackgroundColor="White" CornerRadius="25" Padding="25"   >
+                <VerticalStackLayout Spacing="15">
+                    <!-- Entradas -->
+                    <Grid VerticalOptions="Center" HeightRequest="52">
+                        <Entry x:Name="usernameEntry"
+                               Placeholder="Nombre"
+                               FontSize="18"
+                               TextColor="#1F2937"
+                               PlaceholderColor="#9CA3AF"
+                               BackgroundColor="Transparent"
+                               Grid.Column="1" />
+                    </Grid>
+
+                    <Grid VerticalOptions="Center" HeightRequest="52">
+                        <Entry x:Name="emailEntry"
+                               Placeholder="Correo Electrónico"
+                               Keyboard="Email"
+                               FontSize="18"
+                               TextColor="#1F2937"
+                               PlaceholderColor="#9CA3AF"
+                               BackgroundColor="Transparent"
+                               Grid.Column="1" />
+                    </Grid>
+
+                    <Grid VerticalOptions="Center" HeightRequest="52">
+                        <Entry x:Name="phoneEntry"
+                               Placeholder="Teléfono"
+                               Keyboard="Telephone"
+                               FontSize="18"
+                               TextColor="#1F2937"
+                               PlaceholderColor="#9CA3AF"
+                               BackgroundColor="Transparent"
+                               Grid.Column="1" />
+                    </Grid>
+
+                    <Grid VerticalOptions="Center" HeightRequest="52">
+                        <Entry x:Name="passwordEntry"
+                               Placeholder="Contraseña"
+                               IsPassword="True"
+                               FontSize="18"
+                               TextColor="#1F2937"
+                               PlaceholderColor="#9CA3AF"
+                               BackgroundColor="Transparent"
+                               Grid.Column="1" />
+                    </Grid>
+
+                    <Grid VerticalOptions="Center" HeightRequest="52">
+                        <Entry x:Name="confirmPasswordEntry"
+                               Placeholder="Confirmar Contraseña"
+                               IsPassword="True"
+                               FontSize="18"
+                               TextColor="#1F2937"
+                               PlaceholderColor="#9CA3AF"
+                               BackgroundColor="Transparent"
+                               Grid.Column="1" />
+                    </Grid>
+
+                    <Label x:Name="errorLabel"
+                           TextColor="#DC2626"
+                           FontAttributes="Bold"
+                           IsVisible="False"
+                           HorizontalOptions="Center" />
+
+                    <!-- Botón Registrarse -->
+                    <Button Text="Registrarse"
+                            BackgroundColor="#4F46E5"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="25"
+                            HeightRequest="52"
+                            Clicked="OnRegisterClicked">
+                        <Button.Triggers>
+                            <Trigger TargetType="Button" Property="IsPressed" Value="True">
+                                <Setter Property="BackgroundColor" Value="#3730A3" />
+                            </Trigger>
+                        </Button.Triggers>
+                    </Button>
+
+                    <!-- Botón Cancelar -->
+                    <Button Text="Cancelar"
+                            BackgroundColor="Transparent"
+                            TextColor="#4F46E5"
+                            FontAttributes="Bold"
+                            BorderColor="#4F46E5"
+                            BorderWidth="2"
+                            CornerRadius="25"
+                            HeightRequest="52"
+                            Clicked="OnCancelClicked" />
+
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,101 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.HomeManagerPage"
+             Title="Inicio - Manager"
+             BackgroundColor="#F9FAFB">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="30">
+
+            <!-- Bienvenida -->
+            <Label x:Name="bienvenidaLabel"
+                   FontSize="22"
+                   TextColor="#333"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Saludo -->
+            <Label x:Name="SaludoLabel"
+                   Text="¡Hola, [Nombre]!"
+                   FontSize="30"
+                   FontAttributes="Bold"
+                   TextColor="#111"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <Grid ColumnDefinitions="*,*"
+                  RowDefinitions="Auto,Auto,Auto"
+                  RowSpacing="18"
+                  ColumnSpacing="18">
+
+                <!-- Fila 1 -->
+                <Button Grid.Row="0" Grid.Column="0"
+                    Text="🎉 Crear evento"
+                    Clicked="OnCrearEventoClicked"
+                    Style="{StaticResource HomeButtonStyle}"
+                    HeightRequest="78"
+                    Padding="12,20"
+                    FontSize="14"
+                    LineBreakMode="WordWrap" />
+
+                <Button Grid.Row="0" Grid.Column="1"
+                    Text="📅 Ver y editar mis eventos"
+                    Clicked="OnVerEditarEventoClicked"
+                    Style="{StaticResource HomeButtonStyle}"
+                    HeightRequest="78"
+                    Padding="12,20"
+                    FontSize="14"
+                    LineBreakMode="WordWrap" />
+
+                <!-- Fila 2 -->
+                <Button Grid.Row="1" Grid.Column="0"
+                    Text="🎤 Ver y editar artistas"
+                    Clicked="OnVerEditarArtistaClicked"
+                    Style="{StaticResource HomeButtonStyle}"
+                    HeightRequest="78"
+                    Padding="12,20"
+                    FontSize="14"
+                    LineBreakMode="WordWrap" />
+
+                <Button Grid.Row="1" Grid.Column="1"
+                    Text="📍 Ver y editar lugares"
+                    Clicked="OnVerEditarLugarClicked"
+                    Style="{StaticResource HomeButtonStyle}"
+                    HeightRequest="78"
+                    Padding="12,20"
+                    FontSize="14"
+                    LineBreakMode="WordWrap" />
+
+                <!-- Fila 3 -->
+                <Button Grid.Row="2" Grid.Column="0"
+                    Text="🎸 Ver instrumentos"
+                    Clicked="OnVerEditarInstrumentoClicked"
+                    Style="{StaticResource HomeButtonStyle}"
+                    HeightRequest="78"
+                    Padding="12,20"
+                    FontSize="14"
+                    LineBreakMode="WordWrap" />
+
+                <Button Grid.Row="2" Grid.Column="1"
+                    Text="👤 Ver perfil"
+                    Clicked="OnVerPerfilClicked"
+                    Style="{StaticResource HomeButtonStyle}"
+                    HeightRequest="78"
+                    Padding="12,20"
+                    FontSize="14"
+                    LineBreakMode="WordWrap" />
+            </Grid>
+
+            <!-- Eventos próximos -->
+            <Label Text="Próximos eventos:" FontAttributes="Bold" FontSize="18" TextColor="#222" />
+            <StackLayout x:Name="EventosStack" Spacing="16" />
+            <Label x:Name="SinEventosLabel"
+                   Text="No hay eventos recientes"
+                   IsVisible="False"
+                   FontSize="16"
+                   TextColor="#888"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

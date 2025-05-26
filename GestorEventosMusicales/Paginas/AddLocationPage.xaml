@@ -1,0 +1,56 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorEventosMusicales.Paginas.AddLocationPage"
+             Title="Añadir Ubicación"
+             BackgroundColor="#F9FAFB">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Campo -->
+            <Label Text="Nombre" TextColor="#333" FontAttributes="Bold"/>
+            <Entry x:Name="nombreEntry" Placeholder="Ej: Estadio Nacional" BackgroundColor="White"/>
+
+            <Label Text="Dirección" TextColor="#333" FontAttributes="Bold"/>
+            <Entry x:Name="direccionEntry" Placeholder="Ej: Av. Providencia 1234" BackgroundColor="White"/>
+
+            <Label Text="Ciudad" TextColor="#333" FontAttributes="Bold"/>
+            <Entry x:Name="ciudadEntry" Placeholder="Ej: Santiago" BackgroundColor="White"/>
+
+            <Label Text="Región" TextColor="#333" FontAttributes="Bold"/>
+            <Entry x:Name="regionEntry" Placeholder="Ej: Metropolitana" BackgroundColor="White"/>
+
+            <Label Text="Código Postal" TextColor="#333" FontAttributes="Bold"/>
+            <Entry x:Name="codigoPostalEntry" Placeholder="Ej: 7500000" Keyboard="Numeric" BackgroundColor="White"/>
+
+            <Label Text="País" TextColor="#333" FontAttributes="Bold"/>
+            <Entry x:Name="paisEntry" Placeholder="Ej: Chile" BackgroundColor="White"/>
+
+            <Label Text="Capacidad" TextColor="#333" FontAttributes="Bold"/>
+            <Entry x:Name="capacidadEntry" Placeholder="Ej: 10000" Keyboard="Numeric" BackgroundColor="White"/>
+
+            <Label Text="Teléfono" TextColor="#333" FontAttributes="Bold"/>
+            <Entry x:Name="telefonoEntry" Placeholder="Ej: +56 9 1234 5678" Keyboard="Telephone" BackgroundColor="White"/>
+
+            <Label Text="Email" TextColor="#333" FontAttributes="Bold"/>
+            <Entry x:Name="emailEntry" Placeholder="Ej: contacto@ejemplo.com" Keyboard="Email" BackgroundColor="White"/>
+
+            <!-- Botones -->
+            <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
+                <Button Text="Guardar"
+                        Clicked="OnGuardarClicked"
+                        BackgroundColor="#28A745"
+                        TextColor="White"
+                        CornerRadius="12"
+                        WidthRequest="140" />
+
+                <Button Text="Cancelar"
+                        Clicked="OnCancelarClicked"
+                        BackgroundColor="#6C757D"
+                        TextColor="White"
+                        CornerRadius="12"
+                        WidthRequest="140" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
