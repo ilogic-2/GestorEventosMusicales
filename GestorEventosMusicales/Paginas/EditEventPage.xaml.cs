@@ -83,7 +83,6 @@ namespace GestorEventosMusicales.Paginas
                     locacionPicker.ItemsSource = locacionesDisponibles;
                     locacionPicker.ItemDisplayBinding = new Binding("Nombre");
 
-                    // Cargar los detalles del evento en los campos
                     nombreEntry.Text = evento.Nombre;
                     fechaEventoPicker.Date = evento.FechaEvento;
                     fechaMontajePicker.Date = evento.FechaMontaje;
