@@ -38,7 +38,12 @@ namespace GestorEventosMusicales.Paginas
                 await stream.CopyToAsync(ms);
                 _imagenSeleccionada = ms.ToArray();
 
-                imagenPerfil.Source = ImageSource.FromStream(() => new MemoryStream(_imagenSeleccionada));
+                // Usar una copia del stream para evitar errores
+                if (_imagenSeleccionada != null)
+                {
+                    var streamImagen = new MemoryStream(_imagenSeleccionada);
+                    imagenPerfil.Source = ImageSource.FromStream(() => streamImagen);
+                }
             }
         }
 
@@ -80,7 +85,8 @@ namespace GestorEventosMusicales.Paginas
             if (manager?.Imagen != null)
             {
                 _imagenActual = manager.Imagen;
-                imagenPerfil.Source = ImageSource.FromStream(() => new MemoryStream(manager.Imagen));
+                var streamImagen = new MemoryStream(manager.Imagen);
+                imagenPerfil.Source = ImageSource.FromStream(() => streamImagen);
             }
             else
             {

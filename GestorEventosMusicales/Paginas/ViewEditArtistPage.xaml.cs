@@ -26,34 +26,42 @@ namespace GestorEventosMusicales.Paginas
             _ = CargarArtistasAsync();
         }
 
-        [Obsolete]
         private async Task CargarArtistasAsync()
         {
             try
             {
-                // Obtener el managerId usando el método ObtenerManagerIdActualAsync
                 int managerId = await _databaseService.ObtenerManagerIdActualAsync();
 
-                // Si no se encuentra el managerId, mostrar mensaje de error
                 if (managerId == -1)
                 {
                     await DisplayAlert("Error", "No se ha encontrado el ID del manager. Inicia sesión nuevamente.", "OK");
                     return;
                 }
 
-                // Obtener los artistas para ese managerId
-                ArtistasTotales = await _databaseService.ObtenerArtistasAsync(managerId);
+                var manager = await _databaseService.ObtenerManagerPorIdAsync(managerId);
+                bool esAdmin = manager?.Rol?.ToLower() == "admin";
+
+                // Obtener todos los artistas si es admin, o solo los suyos si no lo es
+                List<Artista> artistas;
+                if (esAdmin)
+                {
+                    artistas = await _databaseService.ObtenerTodosLosArtistasAsync();
+                }
+                else
+                {
+                    artistas = await _databaseService.ObtenerArtistasAsync(managerId);
+                }
 
                 // Modificar la UI en el hilo principal
-                Device.BeginInvokeOnMainThread(() =>
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Artistas = new ObservableCollection<Artista>();
-                    foreach (var artista in ArtistasTotales)
+
+                    foreach (var artista in artistas)
                     {
-                        // Si el artista tiene una imagen, la cargamos
                         if (artista.Imagen != null)
                         {
-                            artista.ImagenPreview = ImageSource.FromStream(() => new System.IO.MemoryStream(artista.Imagen));
+                            artista.ImagenPreview = ImageSource.FromStream(() => new MemoryStream(artista.Imagen));
                         }
 
                         Artistas.Add(artista);
@@ -62,9 +70,9 @@ namespace GestorEventosMusicales.Paginas
                     artistList.ItemsSource = Artistas;
                 });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await DisplayAlert("Error", "No se pudo cargar los artistas.", "OK");
+                await DisplayAlert("Error", $"No se pudo cargar los artistas: {ex.Message}", "OK");
             }
         }
 

@@ -31,6 +31,7 @@ namespace GestorEventosMusicales.Paginas
                     Preferences.Set("usuarioId", manager.Id);
                     Preferences.Set("usuarioNombre", manager.Nombre);
                     Preferences.Set("usuarioCorreo", manager.Correo);
+                    Preferences.Set("usuarioRol", manager.Rol);
 
                     // Redirigir al HomeManagerPage
                     await Shell.Current.GoToAsync($"//HomeManagerPage?nombreUsuario={manager.Nombre}");

@@ -157,6 +157,7 @@
                                        TextColor="#222222" />
 
                                 <Button Text="❌"
+                                        TextColor="White"
                                         Grid.Column="1"
                                         Clicked="OnQuitarManagerClicked"
                                         CommandParameter="{Binding .}"
@@ -175,12 +176,16 @@
 
             <!-- Botones guardar y cancelar -->
             <HorizontalStackLayout Spacing="20" Padding="20,0,20,20">
-                <Button Text="Guardar artista"
+                <Button Text="💾 Guardar"
+                        BackgroundColor="#28A745" 
+                        TextColor="White" 
                         Clicked="OnGuardarClicked"
                         Style="{StaticResource ButtonPrimary}"
                         HorizontalOptions="FillAndExpand" />
 
-                <Button Text="Cancelar"
+                <Button Text="❌ Cancelar"
+                        BackgroundColor="#9CA3AF" 
+                        TextColor="White" 
                         Clicked="OnCancelarClicked"
                         Style="{StaticResource ButtonSecondary}"
                         HorizontalOptions="FillAndExpand" />

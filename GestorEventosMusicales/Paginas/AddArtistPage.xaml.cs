@@ -134,9 +134,13 @@ namespace GestorEventosMusicales.Paginas
             var result = await FilePicker.PickAsync();
             if (result != null)
             {
-                var stream = await result.OpenReadAsync();
-                imageBytes = new byte[stream.Length];
-                await stream.ReadAsync(imageBytes, 0, (int)stream.Length);
+                using (var stream = await result.OpenReadAsync())
+                {
+                    imageBytes = new byte[stream.Length];
+                    await stream.ReadAsync(imageBytes, 0, (int)stream.Length);
+                }
+
+                // Cargar imagen desde los bytes ya leídos
                 imagenPreview.Source = ImageSource.FromStream(() => new MemoryStream(imageBytes));
             }
         }
@@ -166,7 +170,7 @@ namespace GestorEventosMusicales.Paginas
                     await DisplayAlert("Éxito", "El artista ha sido actualizado correctamente.", "OK");
                 }
 
-                await Shell.Current.GoToAsync(nameof(ViewEditArtistPage));
+                await Shell.Current.GoToAsync($"///{nameof(ViewEditArtistPage)}");
             }
             catch (Exception ex)
             {
@@ -176,28 +180,35 @@ namespace GestorEventosMusicales.Paginas
 
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync(nameof(ViewEditArtistPage));
+            await Shell.Current.GoToAsync($"///{nameof(ViewEditArtistPage)}");
         }
 
         private async void OnAñadirManagerClicked(object sender, EventArgs e)
         {
-            var managersDisponibles = await _databaseService.ObtenerManagersAsync();
-
-            var managersNoAsociados = managersDisponibles
-                .Where(m => !ManagersAsociados.Any(ma => ma.Id == m.Id))
-                .ToList();
-
-            string[] nombres = managersNoAsociados.Select(m => m.Nombre).ToArray();
-
-            string seleccionado = await DisplayActionSheet("Selecciona un Manager", "Cancelar", null, nombres);
-
-            if (seleccionado != null && seleccionado != "Cancelar")
+            try
             {
-                var manager = managersNoAsociados.FirstOrDefault(m => m.Nombre == seleccionado);
-                if (manager != null)
+                var managersDisponibles = await _databaseService.ObtenerManagersAsync();
+
+                var managersNoAsociados = managersDisponibles
+                    .Where(m => !ManagersAsociados.Any(ma => ma.Id == m.Id))
+                    .ToList();
+
+                string[] nombres = managersNoAsociados.Select(m => m.Nombre).ToArray();
+
+                string seleccionado = await DisplayActionSheet("Selecciona un Manager", "Cancelar", null, nombres);
+
+                if (seleccionado != null && seleccionado != "Cancelar")
                 {
-                    ManagersAsociados.Add(manager);
+                    var manager = managersNoAsociados.FirstOrDefault(m => m.Nombre == seleccionado);
+                    if (manager != null)
+                    {
+                        ManagersAsociados.Add(manager);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Ocurrió un error: {ex.Message}", "OK");
             }
         }
 

@@ -101,7 +101,7 @@ namespace GestorEventosMusicales.Paginas
                 if (resultado > 0)
                 {
                     await DisplayAlert("Éxito", locacionEditando != null ? "Lugar actualizado correctamente." : "Lugar agregado correctamente.", "OK");
-                    await Shell.Current.GoToAsync(nameof(ViewEditLocationPage));
+                    await Shell.Current.GoToAsync($"///{nameof(ViewEditLocationPage)}");
                 }
                 else
                 {
@@ -132,7 +132,7 @@ namespace GestorEventosMusicales.Paginas
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
             // Navegar hacia la página de vista y edición
-            await Shell.Current.GoToAsync(nameof(ViewEditLocationPage));
+            await Shell.Current.GoToAsync($"///{nameof(ViewEditLocationPage)}");
         }
     }
 }

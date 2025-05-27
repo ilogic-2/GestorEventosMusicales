@@ -9,6 +9,7 @@
         public string Contrasena { get; set; }
 
         public byte[] Imagen { get; set; }
+        public string Rol { get; set; }
 
         public List<Artista> Artistas { get; set; }
 

@@ -37,14 +37,14 @@
 
             <!-- Botones -->
             <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
-                <Button Text="Guardar"
+                <Button Text="💾 Guardar"
                         Clicked="OnGuardarClicked"
                         BackgroundColor="#28A745"
                         TextColor="White"
                         CornerRadius="12"
                         WidthRequest="140" />
 
-                <Button Text="Cancelar"
+                <Button Text="❌ Cancelar"
                         Clicked="OnCancelarClicked"
                         BackgroundColor="#6C757D"
                         TextColor="White"

@@ -110,7 +110,7 @@ namespace GestorEventosMusicales.Paginas
                     await DisplayAlert("Éxito", "Instrumento actualizado correctamente.", "OK");
                 }
 
-                await Shell.Current.GoToAsync(nameof(ViewEditInstrumentPage));
+                await Shell.Current.GoToAsync($"///{nameof(ViewEditInstrumentPage)}");
             }
             catch (Exception ex)
             {
@@ -122,7 +122,7 @@ namespace GestorEventosMusicales.Paginas
         {
             try
             {
-                await Shell.Current.GoToAsync(nameof(ViewEditInstrumentPage));
+                await Shell.Current.GoToAsync($"///{nameof(ViewEditInstrumentPage)}");
             }
             catch (Exception ex)
             {

@@ -7,7 +7,7 @@ namespace GestorEventosMusicales.Data
     public class DatabaseService
     {
         // variable encargada de la definición para la conexión
-        private readonly string _connectionString = "Host=7.tcp.eu.ngrok.io;Port=18253;Username=postgres;Password=0603;Database=GestorEventosDB";
+        private readonly string _connectionString = "Host=7.tcp.eu.ngrok.io;Port=16877;Username=postgres;Password=0603;Database=GestorEventosDB";
 
         // Registra un usurio
         public int GuardarManager(Manager manager)
@@ -55,6 +55,10 @@ namespace GestorEventosMusicales.Data
 
             return null;
         }
+
+        // MANAGER ADMIN
+
+
 
         // detecta cuál es el id de la sección actual del manager conectado
         public async Task<int> ObtenerManagerIdActualAsync()
@@ -139,6 +143,8 @@ namespace GestorEventosMusicales.Data
             return lista;
         }
 
+
+
         // busca un instrumento según su id
         public async Task<Instrumento?> ObtenerInstrumentoPorIdAsync(int instrumentoId)
         {
@@ -165,6 +171,31 @@ namespace GestorEventosMusicales.Data
             return null; // No encontrado
         }
 
+        public async Task<List<Instrumento>> ObtenerTodosLosInstrumentosAsync()
+        {
+            var lista = new List<Instrumento>();
+
+            using var conexion = new NpgsqlConnection(_connectionString);
+            await conexion.OpenAsync();
+
+            string query = "SELECT id, nombre, cantidad, proveedor FROM instrumentos";
+
+            using var cmd = new NpgsqlCommand(query, conexion);
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                lista.Add(new Instrumento
+                {
+                    Id = reader.GetInt32(0),
+                    Nombre = reader.GetString(1),
+                    Cantidad = reader.GetInt32(2),
+                    Proveedor = reader.GetString(3)
+                });
+            }
+
+            return lista;
+        }
 
         // añade un instrumento a la base de datos
         public async Task InsertarInstrumentoAsync(Instrumento instrumento)
@@ -338,26 +369,44 @@ namespace GestorEventosMusicales.Data
 
         // eliminar un lugar de la BD
         public async Task<int> EliminarLocacionAsync(int locacionId, int managerId)
-        {
-            int filasAfectadas = 0;
+{
+    int filasAfectadas = 0;
 
-            using var conn = new NpgsqlConnection(_connectionString);
-            await conn.OpenAsync();
+    using var conn = new NpgsqlConnection(_connectionString);
+    await conn.OpenAsync();
 
-            string query = @"DELETE FROM locacion WHERE id = @id AND manager_id = @manager_id RETURNING id;";
+    // Obtener manager para saber si es admin
+    var manager = await ObtenerManagerPorIdAsync(managerId);
+    bool esAdmin = manager?.Rol?.ToLower() == "admin";
 
-            using var cmd = new NpgsqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("id", locacionId);
-            cmd.Parameters.AddWithValue("manager_id", managerId);
+    string query;
+    using var cmd = new NpgsqlCommand();
+    cmd.Connection = conn;
 
-            var result = await cmd.ExecuteScalarAsync();
-            if (result != null && int.TryParse(result.ToString(), out int id))
-            {
-                filasAfectadas = 1;
-            }
+    if (esAdmin)
+    {
+        // Admin puede borrar cualquier locación sin importar manager_id
+        query = "DELETE FROM locacion WHERE id = @id RETURNING id;";
+        cmd.CommandText = query;
+        cmd.Parameters.AddWithValue("id", locacionId);
+    }
+    else
+    {
+        // Manager normal solo puede borrar si es dueño (manager_id)
+        query = "DELETE FROM locacion WHERE id = @id AND manager_id = @manager_id RETURNING id;";
+        cmd.CommandText = query;
+        cmd.Parameters.AddWithValue("id", locacionId);
+        cmd.Parameters.AddWithValue("manager_id", managerId);
+    }
 
-            return filasAfectadas;
-        }
+    var result = await cmd.ExecuteScalarAsync();
+    if (result != null && int.TryParse(result.ToString(), out int id))
+    {
+        filasAfectadas = 1;
+    }
+
+    return filasAfectadas;
+}
 
 
 
@@ -373,10 +422,21 @@ namespace GestorEventosMusicales.Data
             using var conexion = new NpgsqlConnection(_connectionString);
             await conexion.OpenAsync();
 
-            string query = @"SELECT id, nombre, cantidad, proveedor FROM instrumentos WHERE manager_id = @managerId";
+            string query;
+
+            if (managerId == 0) // admin, todos los instrumentos sin filtro
+            {
+                query = @"SELECT id, nombre, cantidad, proveedor FROM instrumentos";
+            }
+            else
+            {
+                query = @"SELECT id, nombre, cantidad, proveedor FROM instrumentos WHERE manager_id = @managerId";
+            }
 
             using var cmd = new NpgsqlCommand(query, conexion);
-            cmd.Parameters.AddWithValue("@managerId", managerId);
+
+            if (managerId != 0)
+                cmd.Parameters.AddWithValue("@managerId", managerId);
 
             using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
@@ -405,14 +465,57 @@ namespace GestorEventosMusicales.Data
             using var conexion = new NpgsqlConnection(_connectionString);
             await conexion.OpenAsync();
 
-            string query = @"
+            string query;
+
+            if (managerId == 0) // admin, devuelve todos los artistas sin filtro
+            {
+                query = @"
+        SELECT id, nombre, fecha_nacimiento, nacionalidad, banda, imagen
+        FROM artistas";
+            }
+            else
+            {
+                query = @"
         SELECT a.id, a.nombre, a.fecha_nacimiento, a.nacionalidad, a.banda, a.imagen
         FROM artistas a
         INNER JOIN artistas_managers am ON a.id = am.artista_id
         WHERE am.manager_id = @managerId";
+            }
 
             using var cmd = new NpgsqlCommand(query, conexion);
-            cmd.Parameters.AddWithValue("@managerId", managerId);
+
+            if (managerId != 0)
+                cmd.Parameters.AddWithValue("@managerId", managerId);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                lista.Add(new Artista
+                {
+                    Id = reader.GetInt32(0),
+                    Nombre = reader.GetString(1),
+                    FechaNacimiento = reader.GetDateTime(2),
+                    Nacionalidad = reader.IsDBNull(3) ? string.Empty : reader.GetString(3),
+                    Banda = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
+                    Imagen = reader.IsDBNull(5) ? null : (byte[])reader["imagen"]
+                });
+            }
+
+            return lista;
+        }
+
+        public async Task<List<Artista>> ObtenerTodosLosArtistasAsync()
+        {
+            var lista = new List<Artista>();
+
+            using var conexion = new NpgsqlConnection(_connectionString);
+            await conexion.OpenAsync();
+
+            string query = @"
+SELECT id, nombre, fecha_nacimiento, nacionalidad, banda, imagen
+FROM artistas";
+
+            using var cmd = new NpgsqlCommand(query, conexion);
 
             using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
@@ -555,8 +658,8 @@ namespace GestorEventosMusicales.Data
             using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            // Asegúrate de incluir el campo 'imagen' en la consulta
-            string query = "SELECT id, nombre, correo, telefono, imagen FROM managers WHERE id = @id";
+            // Incluye el campo 'rol' en la consulta para poder identificar si es admin
+            string query = "SELECT id, nombre, correo, telefono, imagen, rol FROM managers WHERE id = @id";
 
             using var cmd = new NpgsqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@id", id);
@@ -570,7 +673,8 @@ namespace GestorEventosMusicales.Data
                     Nombre = reader.IsDBNull(1) ? "" : reader.GetString(1),
                     Correo = reader.IsDBNull(2) ? "" : reader.GetString(2),
                     Telefono = reader.IsDBNull(3) ? "" : reader.GetString(3),
-                    Imagen = reader.IsDBNull(4) ? null : (byte[])reader["imagen"]  // Cargar la imagen como byte[]
+                    Imagen = reader.IsDBNull(4) ? null : (byte[])reader["imagen"],
+                    Rol = reader.IsDBNull(5) ? "" : reader.GetString(5)  // Agrega el campo rol aquí
                 };
             }
 
@@ -647,37 +751,65 @@ namespace GestorEventosMusicales.Data
         // elimina de la BD al artista si es que no está asociado a ningún otro manager.
         public async Task<int> EliminarArtistaAsync(int artista_id, int managerId)
         {
-            int filasAfectadas = 0;
-
             using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            // Verificar si el artista le pertenece al manager
+            // Verificar si el manager es admin
+            var manager = await ObtenerManagerPorIdAsync(managerId);
+            bool esAdmin = manager?.Rol?.ToLower() == "admin";
+
+            if (esAdmin)
+            {
+                // Eliminar todas las relaciones (evento_artistas y artistas_managers) y luego el artista
+                string eliminarRelacionesEvento = "DELETE FROM evento_artistas WHERE artista_id = @artista_id";
+                using (var cmd = new NpgsqlCommand(eliminarRelacionesEvento, conn))
+                {
+                    cmd.Parameters.AddWithValue("artista_id", artista_id);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+
+                string eliminarManagers = "DELETE FROM artistas_managers WHERE artista_id = @artista_id";
+                using (var cmd = new NpgsqlCommand(eliminarManagers, conn))
+                {
+                    cmd.Parameters.AddWithValue("artista_id", artista_id);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+
+                string eliminarArtista = "DELETE FROM artistas WHERE id = @id RETURNING id";
+                using (var cmd = new NpgsqlCommand(eliminarArtista, conn))
+                {
+                    cmd.Parameters.AddWithValue("id", artista_id);
+                    var result = await cmd.ExecuteScalarAsync();
+                    return result != null ? 1 : 0;
+                }
+            }
+
+            // Si no es admin, continuar con el flujo normal
+
+            // Verificar que el artista esté vinculado al manager
             string checkQuery = "SELECT 1 FROM artistas_managers WHERE artista_id = @id AND manager_id = @managerId";
             using (var checkCmd = new NpgsqlCommand(checkQuery, conn))
             {
                 checkCmd.Parameters.AddWithValue("@id", artista_id);
                 checkCmd.Parameters.AddWithValue("@managerId", managerId);
                 var result = await checkCmd.ExecuteScalarAsync();
-                if (result == null) return 0;
+                if (result == null)
+                    return -1; // No pertenece a este manager
             }
 
-            // Contar cuántos managers tiene ese artista
+            // Ver cuántos managers hay asociados a este artista
             string countQuery = "SELECT COUNT(*) FROM artistas_managers WHERE artista_id = @id";
             int cantidadManagers = 0;
             using (var countCmd = new NpgsqlCommand(countQuery, conn))
             {
                 countCmd.Parameters.AddWithValue("@id", artista_id);
                 var result = await countCmd.ExecuteScalarAsync();
-
-                if (result is long countLong)
-                    cantidadManagers = (int)countLong;
+                cantidadManagers = Convert.ToInt32(result);
             }
 
-            // si el artista tiene más de un manager asociado
             if (cantidadManagers > 1)
             {
-                // Solo eliminar la relación con este manager
+                // Solo borrar la relación con este manager
                 string deleteRelacion = "DELETE FROM artistas_managers WHERE artista_id = @artista_id AND manager_id = @manager_id";
                 using (var cmd = new NpgsqlCommand(deleteRelacion, conn))
                 {
@@ -686,10 +818,10 @@ namespace GestorEventosMusicales.Data
                     await cmd.ExecuteNonQueryAsync();
                 }
 
-                return 2; // Relación eliminada, artista sigue existiendo
+                return 2; // Solo se eliminó la relación
             }
 
-            // Si solo hay un manager, eliminar todas sus relaciones y luego al artista
+            // Si tiene un solo manager, se puede eliminar todo
             string eliminarRelacionesQuery = "DELETE FROM evento_artistas WHERE artista_id = @artista_id";
             using (var cmd = new NpgsqlCommand(eliminarRelacionesQuery, conn))
             {
@@ -709,18 +841,8 @@ namespace GestorEventosMusicales.Data
             {
                 cmd.Parameters.AddWithValue("id", artista_id);
                 var result = await cmd.ExecuteScalarAsync();
-
-                if (result != null)
-                {
-                    filasAfectadas = 1;
-                }
-                else
-                {
-                    throw new Exception("El DELETE no devolvió ningún resultado. ¿Existe ese artista?");
-                }
+                return result != null ? 1 : 0;
             }
-
-            return filasAfectadas;
         }
 
         // Eliminar eventos solo si no tienen ningún manager asociado, en caso contrario, solo eliminará la relación
@@ -731,42 +853,49 @@ namespace GestorEventosMusicales.Data
             using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            // Verificar si el evento le pertenece al manager
-            string checkQuery = "SELECT 1 FROM evento_managers WHERE evento_id = @id AND manager_id = @managerId";
-            using (var checkCmd = new NpgsqlCommand(checkQuery, conn))
-            {
-                checkCmd.Parameters.AddWithValue("@id", evento_id);
-                checkCmd.Parameters.AddWithValue("@managerId", managerId);
-                var result = await checkCmd.ExecuteScalarAsync();
-                if (result == null) return 0;
-            }
+            // Verificar si el manager es admin
+            var manager = await ObtenerManagerPorIdAsync(managerId);
+            bool esAdmin = manager?.Rol?.ToLower() == "admin";
 
-            // Contar cuántos managers tiene ese evento
-            string countQuery = "SELECT COUNT(*) FROM evento_managers WHERE evento_id = @id";
-            int cantidadManagers = 0;
-            using (var countCmd = new NpgsqlCommand(countQuery, conn))
+            if (!esAdmin)
             {
-                countCmd.Parameters.AddWithValue("@id", evento_id);
-                var result = await countCmd.ExecuteScalarAsync();
-                if (result is long countLong)
-                    cantidadManagers = (int)countLong;
-            }
-
-            if (cantidadManagers > 1)
-            {
-                // Solo eliminar la relación con este manager
-                string deleteRelacion = "DELETE FROM evento_managers WHERE evento_id = @evento_id AND manager_id = @manager_id";
-                using (var cmd = new NpgsqlCommand(deleteRelacion, conn))
+                // Verificar si el evento le pertenece al manager
+                string checkQuery = "SELECT 1 FROM evento_managers WHERE evento_id = @id AND manager_id = @managerId";
+                using (var checkCmd = new NpgsqlCommand(checkQuery, conn))
                 {
-                    cmd.Parameters.AddWithValue("evento_id", evento_id);
-                    cmd.Parameters.AddWithValue("manager_id", managerId);
-                    await cmd.ExecuteNonQueryAsync();
+                    checkCmd.Parameters.AddWithValue("@id", evento_id);
+                    checkCmd.Parameters.AddWithValue("@managerId", managerId);
+                    var result = await checkCmd.ExecuteScalarAsync();
+                    if (result == null) return 0;
                 }
 
-                return 2; // Relación eliminada, evento sigue existiendo
+                // Contar cuántos managers tiene ese evento
+                string countQuery = "SELECT COUNT(*) FROM evento_managers WHERE evento_id = @id";
+                int cantidadManagers = 0;
+                using (var countCmd = new NpgsqlCommand(countQuery, conn))
+                {
+                    countCmd.Parameters.AddWithValue("@id", evento_id);
+                    var result = await countCmd.ExecuteScalarAsync();
+                    if (result is long countLong)
+                        cantidadManagers = (int)countLong;
+                }
+
+                if (cantidadManagers > 1)
+                {
+                    // Solo eliminar la relación con este manager
+                    string deleteRelacion = "DELETE FROM evento_managers WHERE evento_id = @evento_id AND manager_id = @manager_id";
+                    using (var cmd = new NpgsqlCommand(deleteRelacion, conn))
+                    {
+                        cmd.Parameters.AddWithValue("evento_id", evento_id);
+                        cmd.Parameters.AddWithValue("manager_id", managerId);
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+
+                    return 2; // Relación eliminada, evento sigue existiendo
+                }
             }
 
-            // Si solo hay un manager, eliminar todas sus relaciones y luego el evento
+            // Si es admin o es el único manager, eliminar todas las relaciones y luego el evento
             string eliminarRelacionesArtistas = "DELETE FROM evento_artistas WHERE evento_id = @evento_id";
             using (var cmd = new NpgsqlCommand(eliminarRelacionesArtistas, conn))
             {
@@ -818,13 +947,24 @@ namespace GestorEventosMusicales.Data
             using var conexion = new NpgsqlConnection(_connectionString);
             await conexion.OpenAsync();
 
-            string query = @"
-                    SELECT id, nombre, direccion, ciudad, region, codigo_postal, pais, capacidad, telefono, email
-                    FROM locacion
-                    WHERE manager_id = @managerId";
+            string query;
+            if (managerId == 0)  // 0 = admin, ver todas las locaciones
+            {
+                query = @"
+        SELECT id, nombre, direccion, ciudad, region, codigo_postal, pais, capacidad, telefono, email
+        FROM locacion";
+            }
+            else
+            {
+                query = @"
+        SELECT id, nombre, direccion, ciudad, region, codigo_postal, pais, capacidad, telefono, email
+        FROM locacion
+        WHERE manager_id = @managerId";
+            }
 
             using var cmd = new NpgsqlCommand(query, conexion);
-            cmd.Parameters.AddWithValue("@managerId", managerId);
+            if (managerId != 0)
+                cmd.Parameters.AddWithValue("@managerId", managerId);
 
             using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
@@ -847,6 +987,41 @@ namespace GestorEventosMusicales.Data
             return lista;
         }
 
+        public async Task<List<Locacion>> ObtenerTodasLasLocacionesAsync()
+        {
+            var lista = new List<Locacion>();
+
+            using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            string query = @"SELECT id, nombre, direccion, ciudad, region, codigo_postal, pais, capacidad, telefono, email FROM locacion";
+
+            using var cmd = new NpgsqlCommand(query, conn);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                var locacion = new Locacion
+                {
+                    Id = reader.GetInt32(0),
+                    Nombre = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    Direccion = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    Ciudad = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    Region = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    CodigoPostal = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                    Pais = reader.IsDBNull(6) ? "" : reader.GetString(6),
+                    Capacidad = reader.IsDBNull(7) ? 0 : reader.GetInt32(7),
+                    Telefono = reader.IsDBNull(8) ? "" : reader.GetString(8),
+                    Email = reader.IsDBNull(9) ? "" : reader.GetString(9),
+                    IsVisible = true
+                };
+
+                lista.Add(locacion);
+            }
+
+            return lista;
+        }
 
         // devolverá la lista de los managers
         public async Task<List<Manager>> ObtenerManagersAsync()
@@ -1273,11 +1448,11 @@ WHERE id = @id";
             await conexion.OpenAsync();
 
             string query = @"
-SELECT e.id, e.nombre, e.fecha_evento, e.fecha_montaje, e.locacion_id, l.nombre, l.direccion 
-FROM eventos e
-LEFT JOIN locacion l ON e.locacion_id = l.id
-ORDER BY e.fecha_evento ASC
-";
+                SELECT e.id, e.nombre, e.fecha_evento, e.fecha_montaje, e.locacion_id, l.nombre, l.direccion 
+                FROM eventos e
+                LEFT JOIN locacion l ON e.locacion_id = l.id
+                ORDER BY e.fecha_evento ASC
+                ";
 
             using var cmd = new NpgsqlCommand(query, conexion);
             using var reader = await cmd.ExecuteReaderAsync();

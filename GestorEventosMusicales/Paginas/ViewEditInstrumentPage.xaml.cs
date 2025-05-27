@@ -33,7 +33,23 @@ namespace GestorEventosMusicales.Paginas
                 int managerId = await _databaseService.ObtenerManagerIdActualAsync();
                 await Logger.GuardarLogAsync($"ManagerId obtenido: {managerId}");
 
-                var listaInstrumentos = _databaseService.ObtenerInstrumentos(managerId);
+                // Obtener manager para verificar rol admin
+                var manager = await _databaseService.ObtenerManagerPorIdAsync(managerId);
+                bool esAdmin = manager?.Rol?.ToLower() == "admin";
+
+                List<Instrumento> listaInstrumentos;
+
+                if (esAdmin)
+                {
+                    // Cargar todos los instrumentos si es admin
+                    listaInstrumentos = await _databaseService.ObtenerTodosLosInstrumentosAsync();
+                }
+                else
+                {
+                    // Solo los instrumentos del manager actual
+                    listaInstrumentos = await _databaseService.ObtenerInstrumentosAsync(managerId);
+                }
+
                 Instrumentos = new ObservableCollection<Instrumento>(listaInstrumentos);
                 instrumentList.ItemsSource = Instrumentos;
 

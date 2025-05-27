@@ -46,7 +46,8 @@ namespace GestorEventosMusicales.Paginas
                 Nombre = nombre,
                 Correo = correo,
                 Telefono = telefono,
-                Contrasena = contrasena
+                Contrasena = contrasena,
+                Rol = "manager"
             };
 
             try
@@ -55,7 +56,7 @@ namespace GestorEventosMusicales.Paginas
                 Preferences.Set("usuarioId", idManager);
 
                 await DisplayAlert("Registro exitoso", $"Bienvenido, {nombre}", "Aceptar");
-                await Shell.Current.GoToAsync("//LoginPage");
+                await Shell.Current.GoToAsync($"///{nameof(LoginPage)}");
             }
             catch (Exception ex)
             {
@@ -66,7 +67,7 @@ namespace GestorEventosMusicales.Paginas
 
         private async void OnCancelClicked(object sender, EventArgs e)
         {
-            await Navigation.PopAsync();
+            await Shell.Current.GoToAsync($"///{nameof(LoginPage)}");
         }
 
     }

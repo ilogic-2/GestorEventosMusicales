@@ -28,7 +28,24 @@ namespace GestorEventosMusicales.Paginas
         private async Task CargarLugaresAsync()
         {
             int managerId = await _databaseService.ObtenerManagerIdActualAsync();
-            var listaLugares = _databaseService.ObtenerLocaciones(managerId);
+
+            var manager = await _databaseService.ObtenerManagerPorIdAsync(managerId);
+
+            bool esAdmin = manager?.Rol?.ToLower() == "admin";
+
+            List<Locacion> listaLugares;
+
+            if (esAdmin)
+            {
+                // Obtener todas las locaciones
+                listaLugares = await _databaseService.ObtenerTodasLasLocacionesAsync();
+            }
+            else
+            {
+                // Obtener solo las locaciones vinculadas a este manager
+                listaLugares = await _databaseService.ObtenerLocacionesAsync(managerId);
+            }
+
             Lugares = new ObservableCollection<Locacion>(listaLugares);
             locationList.ItemsSource = Lugares;
         }

@@ -117,8 +117,8 @@
 
             <!-- Botones de acción -->
             <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
-                <Button Text="Guardar" BackgroundColor="LightGreen" TextColor="Black" Clicked="OnGuardarClicked" />
-                <Button Text="Cancelar" BackgroundColor="LightGray" TextColor="Black" Clicked="OnCancelarClicked" />
+                <Button Text="💾 Guardar" BackgroundColor="#22C55E" TextColor="White" Clicked="OnGuardarClicked" />
+                <Button Text="❌ Cancelar" BackgroundColor="#9CA3AF" TextColor="White" Clicked="OnCancelarClicked" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

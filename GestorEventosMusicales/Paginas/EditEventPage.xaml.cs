@@ -73,13 +73,17 @@ namespace GestorEventosMusicales.Paginas
             try
             {
                 var evento = await _databaseService.ObtenerEventoPorIdAsync(eventoId);
-                int managerId = await _databaseService.ObtenerManagerIdActualAsync();
+                int managerIdActual = await _databaseService.ObtenerManagerIdActualAsync();
+                var manager = await _databaseService.ObtenerManagerPorIdAsync(managerIdActual);
 
+                // Si es admin, pasar 0 para traer todas las locaciones
+                int idParaConsulta = (manager?.Rol?.ToLower() == "admin") ? 0 : managerIdActual;
 
                 if (evento != null)
                 {
-                    // Cargar la lista de locaciones antes de asignar la seleccionada
-                    locacionesDisponibles = await _databaseService.ObtenerLocacionesParaEdicionAsync(eventoId, managerId);
+                    // Cargar locaciones filtradas según el rol
+                    locacionesDisponibles = await _databaseService.ObtenerLocacionesParaEdicionAsync(eventoId, idParaConsulta);
+
                     locacionPicker.ItemsSource = locacionesDisponibles;
                     locacionPicker.ItemDisplayBinding = new Binding("Nombre");
 
@@ -87,27 +91,22 @@ namespace GestorEventosMusicales.Paginas
                     fechaEventoPicker.Date = evento.FechaEvento;
                     fechaMontajePicker.Date = evento.FechaMontaje;
 
-                    // Asignar locación seleccionada si existe
                     var locacion = locacionesDisponibles.FirstOrDefault(l => l.Id == evento.LocacionId);
                     locacionPicker.SelectedItem = locacion;
 
-                    // Mostrar el nombre y dirección de la locación seleccionada
                     locacionNombreLabel.Text = locacion?.Nombre ?? "Lugar no asignado";
                     locacionDireccionLabel.Text = locacion != null ? " --- " + locacion.Direccion : "Lugar no asignado";
 
-                    // Cargar los artistas asociados
                     var artistas = await _databaseService.ObtenerArtistasPorEventoIdAsync(eventoId);
                     ArtistasAsociados.Clear();
                     foreach (var a in artistas)
                         ArtistasAsociados.Add(a);
 
-                    // Cargar los instrumentos asociados
                     var instrumentos = await _databaseService.ObtenerInstrumentosPorEventoIdAsync(eventoId);
                     InstrumentosAsociados.Clear();
                     foreach (var i in instrumentos)
                         InstrumentosAsociados.Add(i);
 
-                    // Cargar los managers asociados
                     var managers = await _databaseService.ObtenerManagersPorEventoIdAsync(eventoId);
                     ManagersAsociados.Clear();
                     foreach (var m in managers)
@@ -158,7 +157,7 @@ namespace GestorEventosMusicales.Paginas
                 await _databaseService.ActualizarManagersDeEventoAsync(evento.Id, ManagersAsociados.Select(m => m.Id).ToList());
 
                 await DisplayAlert("Éxito", "Evento actualizado correctamente", "OK");
-                await Shell.Current.GoToAsync(nameof(ViewEditEventPage));
+                await Shell.Current.GoToAsync($"///{nameof(ViewEditEventPage)}");
             }
             catch (Exception ex)
             {
@@ -205,12 +204,23 @@ namespace GestorEventosMusicales.Paginas
         // Método para añadir un artista al evento
         private async void OnAgregarArtistaClicked(object sender, EventArgs e)
         {
-            int managerId = await _databaseService.ObtenerManagerIdActualAsync();
-            var artistasDisponibles = await _databaseService.ObtenerArtistasAsync(managerId);
+            int managerIdActual = await _databaseService.ObtenerManagerIdActualAsync();
+            var manager = await _databaseService.ObtenerManagerPorIdAsync(managerIdActual);
+
+            // Si es admin, usar 0 para traer todos los artistas
+            int idParaConsulta = (manager?.Rol?.ToLower() == "admin") ? 0 : managerIdActual;
+
+            var artistasDisponibles = await _databaseService.ObtenerArtistasAsync(idParaConsulta);
 
             var artistasNoAsociados = artistasDisponibles
                 .Where(a => !ArtistasAsociados.Any(aa => aa.Id == a.Id))
                 .ToList();
+
+            if (artistasNoAsociados.Count == 0)
+            {
+                await DisplayAlert("Info", "No hay más artistas disponibles para agregar.", "OK");
+                return;
+            }
 
             string[] nombres = artistasNoAsociados.Select(a => a.Nombre).ToArray();
 
@@ -224,7 +234,6 @@ namespace GestorEventosMusicales.Paginas
                     ArtistasAsociados.Add(artista);
                 }
             }
-            
         }
 
         // Método para quitar un artista del evento
@@ -242,12 +251,23 @@ namespace GestorEventosMusicales.Paginas
         // Método para añadir un instrumento al evento
         private async void OnAgregarInstrumentoClicked(object sender, EventArgs e)
         {
-            int managerId = await _databaseService.ObtenerManagerIdActualAsync();
-            var instrumentosDisponibles = await _databaseService.ObtenerInstrumentosAsync(managerId);
+            int managerIdActual = await _databaseService.ObtenerManagerIdActualAsync();
+            var manager = await _databaseService.ObtenerManagerPorIdAsync(managerIdActual);
+
+            // Si es admin, usar 0 para traer todos los instrumentos
+            int idParaConsulta = (manager?.Rol?.ToLower() == "admin") ? 0 : managerIdActual;
+
+            var instrumentosDisponibles = await _databaseService.ObtenerInstrumentosAsync(idParaConsulta);
 
             var instrumentosNoAsociados = instrumentosDisponibles
                 .Where(i => !InstrumentosAsociados.Any(ii => ii.Id == i.Id))
                 .ToList();
+
+            if (instrumentosNoAsociados.Count == 0)
+            {
+                await DisplayAlert("Info", "No hay más instrumentos disponibles para agregar.", "OK");
+                return;
+            }
 
             string[] nombres = instrumentosNoAsociados.Select(i => i.Nombre).ToArray();
 
@@ -262,6 +282,7 @@ namespace GestorEventosMusicales.Paginas
                 }
             }
         }
+
 
         // Método para quitar un instrumento del evento
         private void OnQuitarInstrumentoClicked(object sender, EventArgs e)
@@ -278,7 +299,7 @@ namespace GestorEventosMusicales.Paginas
         // Método para cancelar la edición y volver atrás
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync(nameof(ViewEditEventPage));
+            await Shell.Current.GoToAsync($"///{nameof(ViewEditEventPage)}");
         }
     }
 }

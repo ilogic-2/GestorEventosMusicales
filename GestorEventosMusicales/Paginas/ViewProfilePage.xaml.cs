@@ -23,7 +23,7 @@ namespace GestorEventosMusicales.Paginas
             int id = Preferences.Get("usuarioId", 0);
             if (id == 0)
             {
-                await Shell.Current.GoToAsync(nameof(LoginPage));
+                await Shell.Current.GoToAsync($"///{nameof(LoginPage)}");
                 return;
             }
 
@@ -47,6 +47,7 @@ namespace GestorEventosMusicales.Paginas
         private async void OnEditarDatosClicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(nameof(EditarPerfilPage));
+
         }
 
         private async void OnCambiarContrasenaClicked(object sender, EventArgs e)
@@ -64,7 +65,7 @@ namespace GestorEventosMusicales.Paginas
                 Preferences.Remove("usuarioNombre");
                 Preferences.Remove("usuarioCorreo");
 
-                await Shell.Current.GoToAsync(nameof(LoginPage));
+                await Shell.Current.GoToAsync($"///{nameof(LoginPage)}");
             }
         }
     }

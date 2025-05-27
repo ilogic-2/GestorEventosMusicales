@@ -69,7 +69,7 @@
                         WidthRequest="120"/>
                 <Button Text="❌ Cancelar"
                         Clicked="OnCancelarClicked"
-                        BackgroundColor="#FF3B30"
+                        BackgroundColor="#444"
                         TextColor="White"
                         FontSize="16"
                         Padding="14,8"

@@ -31,6 +31,7 @@ namespace GestorEventosMusicales
             Routing.RegisterRoute(nameof(ViewEditLocationPage), typeof(ViewEditLocationPage));
             Routing.RegisterRoute(nameof(ViewEditInstrumentPage), typeof(ViewEditInstrumentPage));
             Routing.RegisterRoute(nameof(ViewProfilePage), typeof(ViewProfilePage));
+            
         }
     }
 }

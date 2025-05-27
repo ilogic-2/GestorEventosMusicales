@@ -26,10 +26,10 @@ namespace GestorEventosMusicales.Paginas
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            CargarEventos();
+            CargarEventosAsync();
         }
 
-        private async void CargarEventos()
+        private async Task CargarEventosAsync()
         {
             try
             {
@@ -40,19 +40,44 @@ namespace GestorEventosMusicales.Paginas
                     return;
                 }
 
-                var eventos = await _databaseService.ObtenerEventosAsync();
+                var manager = await _databaseService.ObtenerManagerPorIdAsync(managerId);
+                bool esAdmin = manager?.Rol?.ToLower() == "admin";
+
+                List<Evento> eventos;
+
+                if (esAdmin)
+                {
+                    // El admin ve todos los eventos
+                    eventos = await _databaseService.ObtenerEventosAsync();
+                }
+                else
+                {
+                    // Los demás managers solo los eventos donde están asignados
+                    eventos = new List<Evento>();
+
+                    var todosEventos = await _databaseService.ObtenerEventosAsync();
+
+                    foreach (var evento in todosEventos)
+                    {
+                        evento.Managers = await _databaseService.ObtenerManagersPorEventoAsync(evento.Id);
+
+                        if (evento.Managers.Any(m => m.Id == managerId))
+                        {
+                            eventos.Add(evento);
+                        }
+                    }
+                }
+
                 Eventos.Clear();
                 EventosOriginales.Clear();
 
                 foreach (var evento in eventos)
                 {
-                    evento.Managers = await _databaseService.ObtenerManagersPorEventoAsync(evento.Id);
+                    if (evento.Managers == null)
+                        evento.Managers = await _databaseService.ObtenerManagersPorEventoAsync(evento.Id);
 
-                    if (evento.Managers.Any(m => m.Id == managerId))
-                    {
-                        Eventos.Add(evento);
-                        EventosOriginales.Add(evento);
-                    }
+                    Eventos.Add(evento);
+                    EventosOriginales.Add(evento);
                 }
             }
             catch (Exception ex)

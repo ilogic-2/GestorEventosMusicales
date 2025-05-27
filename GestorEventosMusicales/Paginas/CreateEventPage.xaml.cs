@@ -34,24 +34,27 @@ namespace GestorEventosMusicales.Paginas
             try
             {
                 int managerId = await _databaseService.ObtenerManagerIdActualAsync();
+                var manager = await _databaseService.ObtenerManagerPorIdAsync(managerId);
 
-                // Obtener las locaciones de la base de datos y asignarlas al picker
-                locacionesDisponibles = await _databaseService.ObtenerLocacionesAsync(managerId);
+                bool esAdmin = manager?.Rol?.ToLower() == "admin";
+                int idParaConsulta = esAdmin ? 0 : managerId;
 
-                // Asignación a la lista de locaciones al Picker, con la propiedad "Nombre" para mostrar
+                locacionesDisponibles = await _databaseService.ObtenerLocacionesAsync(idParaConsulta);
+
                 locacionPicker.ItemsSource = locacionesDisponibles;
-                locacionPicker.ItemDisplayBinding = new Binding("Nombre"); 
+                locacionPicker.ItemDisplayBinding = new Binding("Nombre");
 
                 managersDisponibles = await _databaseService.ObtenerManagersAsync();
 
-                todosLosArtistas = await _databaseService.ObtenerArtistasAsync(managerId);
-                todosLosInstrumentos = await _databaseService.ObtenerInstrumentosAsync(managerId);
+                todosLosArtistas = await _databaseService.ObtenerArtistasAsync(idParaConsulta);
+                todosLosInstrumentos = await _databaseService.ObtenerInstrumentosAsync(idParaConsulta);
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", $"Error al cargar datos: {ex.Message}", "OK");
             }
         }
+
 
         private async void OnAgregarArtistaClicked(object sender, EventArgs e)
         {

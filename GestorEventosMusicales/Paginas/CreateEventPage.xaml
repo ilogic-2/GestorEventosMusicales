@@ -186,14 +186,14 @@
 
             <!-- Botones de acción -->
             <HorizontalStackLayout Spacing="25" HorizontalOptions="Center">
-                <Button Text="Guardar" 
+                <Button Text="💾 Guardar" 
                         BackgroundColor="#22C55E" 
                         TextColor="White" 
                         CornerRadius="15" 
                         Padding="15,10"
                         WidthRequest="130"
                         Clicked="OnGuardarClicked" />
-                <Button Text="Cancelar" 
+                <Button Text="❌ Cancelar" 
                         BackgroundColor="#9CA3AF" 
                         TextColor="White" 
                         CornerRadius="15" 
